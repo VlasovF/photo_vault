@@ -5,7 +5,7 @@ from database import Base
 
 
 class PhotoSet(Base):
-        __table__ = "photo_set"
+        __tablename__ = "photo_set"
         id = Column(Integer, primary_key=True)
         photo = relationship("Photo")
 
@@ -18,7 +18,7 @@ class Photo(Base):
 	id = Column(Integer, primary_key=True)
 	body = Column(String, nullable=False)
 	format = Column(String(6), nullable=False)
-	photo_set_id = relationship("PhotoSet")
+	photo_set_id = relationship(Integer, ForeignKey("photo_set.id"))
 
 	def __repr__(self):
 		return "Photo %r" % self.id
