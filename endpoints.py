@@ -3,12 +3,8 @@ from typing import Union
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from models import Photo, PhotoSet, Base
-from schemas import SchemaPhoto, SchemaPhotoSet
-from database import SessionLocal, engine
-
-
-Base.metadata.create_all(bind=engine)
+from database import SessionLocal
+import crud, schemas
 
 
 
@@ -30,16 +26,11 @@ def root():
 
 @router.get("/new_photo_set")
 def new_photo_set(db: Session = Depends(get_db)):
-	new_photo_set = PhotoSet()
-	db.add(new_photo_set)
-	db.commit()
+	new_photo_set = crud.new_photo_set(db=db)
 	return {"photo_set_id": new_photo_set.id}
 
 
 @router.post("/new_photo")
-def add_photo(photo_set_id: int, photo: SchemaPhoto, db: Session = Depends(get_db)):
-	photo_set = db.query(PhotoSet).filter(PhotoSet.id == photo_set_id).first()
-	new_photo = Photo(body=photo.body, format=photo.format)
-	photo_set.photo.add(new_photo)
-	db.commit()
-	return {"photo_set_id": photo_set.id, "photo_id": new_photo.id}
+def add_photo(photo_set_id: int, photo: schemas.SchemaPhoto, db: Session = Depends(get_db)):
+	new_photo = crud.new_photo(photo_set_id=photo_set_id, photo=photo, db=db)
+	return {"photo_set_id": new_photo.photo_set_id, "photo_id": new_photo.id}
