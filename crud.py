@@ -10,9 +10,11 @@ def new_photo_set(db: Session):
 	return	new_photo_set
 
 
-def new_photo(photo_set_id: int, photo: schemas.SchemaPhoto, db: Session):
-	photo_set = db.query(models.PhotoSet).filter(models.PhotoSet.id == photo_set_id).first()
-	new_photo = models.Photo(body=photo.body, format=photo.format)
-	photo_set.photo.add(new_photo)
+def new_photo(photo: schemas.SchemaPhoto, db: Session):
+	new_photo = models.Photo(
+			body=photo.body,
+			format=photo.format,
+			photo_set_id=photo.photo_set_id)
+	db.add(new_photo)
 	db.commit()
 	return new_photo

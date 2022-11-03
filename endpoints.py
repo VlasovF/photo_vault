@@ -31,6 +31,6 @@ def new_photo_set(db: Session = Depends(get_db)):
 
 
 @router.post("/new_photo")
-def add_photo(photo_set_id: int, photo: schemas.SchemaPhoto, db: Session = Depends(get_db)):
-	new_photo = crud.new_photo(photo_set_id=photo_set_id, photo=photo, db=db)
+def add_photo(photo: schemas.SchemaPhoto, db: Session = Depends(get_db)):
+	new_photo = crud.new_photo(photo=photo, db=db)
 	return {"photo_set_id": new_photo.photo_set_id, "photo_id": new_photo.id}
